@@ -1,0 +1,47 @@
+[project]
+name = "django-markdown-field"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Django",
+    "Framework :: Django :: 2.2",
+    "Framework :: Django :: 3.1",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.1",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.9"
+dependencies = ["django"]
+
+[dependency-groups]
+build = ["brotli>=1.1.0", "hatch>=1.14.1"]
+test = ["pytest>=8.0.1", "pytest-django>=4.8.0", "selenium>=4.26.1"]
+
+[tool.hatch.build]
+ignore-vcs = true
+include = ['src/django_markdown_field/**/*']
+packages = ["src/django_markdown_field"]
+directory = 'py-dist'
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
