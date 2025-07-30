@@ -1,5 +1,5 @@
 [project]
-name = "django-markdown-field"
+name = "django-enhanced-markdown-field"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

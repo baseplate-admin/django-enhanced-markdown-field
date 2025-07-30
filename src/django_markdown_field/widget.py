@@ -52,7 +52,7 @@ class MarkdownFormWidget(AdminTextareaWidget):
         # prepare template context
         template_context = {
             "field_name": name,
-            "field_data": value or {},
+            "field_data": value or "",
         }
 
         # get template object

@@ -27,3 +27,4 @@ UserInterfaceState.xcuserstate
 .env
 
 **/*/django_markdown_field/static/**/*.js
+!uv.lock
