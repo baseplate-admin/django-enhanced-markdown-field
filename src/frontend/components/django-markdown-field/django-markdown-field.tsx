@@ -1,15 +1,17 @@
-import { Component, h, Prop, State, Watch } from '@stencil/core';
+import { Component, h, Prop, Element, State, Watch } from '@stencil/core';
 import { marked } from './marked';
 import { HistoryNode } from './history-node';
 @Component({
   tag: 'django-markdown-field',
   styleUrl: 'django-markdown-field.scss',
+  shadow: true,
 })
 export class DjangoMarkdownField {
   tabs = ['Write', 'Preview'] as const;
   private textarea!: HTMLTextAreaElement;
 
-  @Prop() markdown: string = '';
+  @Element() host: HTMLElement;
+  @Prop({ mutable: true }) markdown: string = '';
   @Prop({ reflect: true }) field_name!: string;
 
   @State() currentTab: (typeof this.tabs)[number] = 'Write';
@@ -18,24 +20,45 @@ export class DjangoMarkdownField {
   @State() editorWidth?: number;
   @State() editorHeight?: number;
 
+  @State() hiddenTextarea: HTMLTextAreaElement | null = null;
+
   private historyCurrent: HistoryNode | null = null;
   private debounceTimer: number | null = null;
   private suppressRecord = false;
 
   @Watch('markdown')
   async markdownChanged() {
+    this.syncInput();
     this.renderedHtml = await this.parseMarkdown(this.markdown);
     if (!this.suppressRecord) this.debouncedRecordHistory();
   }
 
   async componentWillLoad() {
     this.renderedHtml = await this.parseMarkdown(this.markdown);
+    this.ensureLightDomInput();
+  }
+
+  private ensureLightDomInput() {
+    if (!this.hiddenTextarea) {
+      // Create and inject hidden input outside the Shadow DOM
+      this.hiddenTextarea = document.createElement('textarea');
+      this.hiddenTextarea.setAttribute('type', 'hidden');
+      this.hiddenTextarea.setAttribute('name', this.field_name);
+      this.host.insertAdjacentElement('afterbegin', this.hiddenTextarea);
+    }
+  }
+
+  private syncInput() {
+    if (this.hiddenTextarea) {
+      this.hiddenTextarea.value = this.markdown;
+    }
   }
 
   componentDidLoad() {
     requestAnimationFrame(() => {
       this.memoizeTextareaSize();
       this.recordHistory();
+      this.syncInput();
     });
 
     window.addEventListener('mouseup', this.memoizeTextareaSize);
@@ -403,7 +426,6 @@ export class DjangoMarkdownField {
         <textarea
           ref={el => (this.textarea = el)}
           class={{ textarea: true, invisible: this.currentTab !== 'Write' }}
-          name={this.field_name}
           value={this.markdown}
           onInput={(e: any) => (this.markdown = e.target.value)}
           style={sizeStyle}
