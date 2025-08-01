@@ -1,8 +1,9 @@
 [project]
 name = "django-enhanced-markdown-field"
-version = "0.1.1    "
+version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
+
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Framework :: Django",
