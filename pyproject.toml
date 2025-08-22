@@ -1,7 +1,7 @@
 [project]
 name = "django-enhanced-markdown-field"
 version = "0.1.2"
-description = "A webcomponent-based Markdown editor for Django admin."
+description = "A web-component based Markdown editor for Django admin."
 readme = "README.md"
 
 classifiers = [
