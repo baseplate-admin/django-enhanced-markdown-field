@@ -1,6 +1,7 @@
 import { Component, h, Prop, Element, State, Watch } from '@stencil/core';
 import { marked } from './marked';
 import { HistoryNode } from './history-node';
+
 @Component({
   tag: 'django-markdown-field',
   styleUrl: 'django-markdown-field.scss',
@@ -16,6 +17,7 @@ export class DjangoMarkdownField {
 
   @State() currentTab: (typeof this.tabs)[number] = 'Write';
   @State() renderedHtml: string = '';
+  @State() theme: string = 'light';
 
   @State() editorWidth?: number;
   @State() editorHeight?: number;
@@ -25,6 +27,28 @@ export class DjangoMarkdownField {
   private historyCurrent: HistoryNode | null = null;
   private debounceTimer: number | null = null;
   private suppressRecord = false;
+  private observer?: MutationObserver;
+
+  @Watch('theme')
+  themeChanged() {
+    console.log(this.theme);
+  }
+
+  connectedCallback() {
+    const html = document.documentElement;
+
+    // Initial read
+    this.theme = html.getAttribute('data-theme') || 'light';
+
+    this.observer = new MutationObserver(() => {
+      const current = html.getAttribute('data-theme') || 'light';
+      if (current !== this.theme) {
+        this.theme = current;
+      }
+    });
+
+    this.observer.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+  }
 
   @Watch('markdown')
   async markdownChanged() {
@@ -68,6 +92,7 @@ export class DjangoMarkdownField {
   disconnectedCallback() {
     window.removeEventListener('mouseup', this.memoizeTextareaSize);
     window.removeEventListener('keydown', this.handleKeydown);
+    this.observer?.disconnect();
   }
 
   private memoizeTextareaSize = () => {
@@ -365,7 +390,7 @@ export class DjangoMarkdownField {
     const sizeStyle = this.editorWidth && this.editorHeight ? { width: `${this.editorWidth}px`, height: `${this.editorHeight}px` } : {};
 
     return (
-      <div class="container">
+      <div class={`container ${this.theme}`}>
         <div class="tab-bar">
           <div class="first-tabs">
             {this.tabs.map(tab => (

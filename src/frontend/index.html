@@ -1,5 +1,5 @@
 <!doctype html>
-<html dir="ltr" lang="en">
+<html dir="ltr" lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
@@ -10,5 +10,11 @@
   </head>
   <body>
     <django-markdown-field field_name="Hello" markdown="# HELLO" middle="'Don't call me a framework'" last="JS"></django-markdown-field>
+    <button
+      onclick="
+        const html = document.documentElement;
+        html.setAttribute('data-theme', html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+      "
+    ></button>
   </body>
 </html>

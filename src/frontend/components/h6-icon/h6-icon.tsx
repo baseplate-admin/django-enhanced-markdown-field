@@ -1,4 +1,4 @@
-import { Component,  h } from '@stencil/core';
+import { Component, h } from '@stencil/core';
 
 @Component({
   tag: 'h6-icon',
@@ -13,7 +13,7 @@ export class H6Icon {
         height="24"
         viewBox="0 0 24 24"
         fill="none"
-        stroke="currentColor"
+        style={{ stroke: 'var(--color-text-dark)' }}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
