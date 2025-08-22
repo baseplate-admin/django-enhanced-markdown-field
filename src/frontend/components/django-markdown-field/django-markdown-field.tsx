@@ -29,27 +29,31 @@ export class DjangoMarkdownField {
   private suppressRecord = false;
   private observer?: MutationObserver;
 
-  @Watch('theme')
-  themeChanged() {
-    console.log(this.theme);
-  }
-
   connectedCallback() {
     const html = document.documentElement;
 
     // Initial read
-    this.theme = html.getAttribute('data-theme') || 'light';
+    const themeAttr = html.getAttribute('data-theme') || 'light';
+    if (themeAttr === 'auto') {
+      this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else {
+      this.theme = themeAttr;
+    }
 
+    // Listen for HTML attribute changes
     this.observer = new MutationObserver(() => {
-      const current = html.getAttribute('data-theme') || 'light';
-      if (current !== this.theme) {
-        this.theme = current;
+      const currentAttr = html.getAttribute('data-theme') || 'light';
+      if (currentAttr !== themeAttr) {
+        if (currentAttr === 'auto') {
+          this.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+          this.theme = currentAttr;
+        }
       }
     });
 
     this.observer.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
   }
-
   @Watch('markdown')
   async markdownChanged() {
     this.syncInput();
