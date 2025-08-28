@@ -29,6 +29,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "marked": "^16.2.0"
+    "marked": "^16.2.1"
   }
 }
